@@ -1,0 +1,127 @@
+import java.util.*;
+class Cricket{
+	protected String batsmanType;
+	protected String bowlerType;
+	protected int runs=0;
+	protected int runsInLastBall=0;
+	protected String ballName;
+	private ArrayList<String> getList(String ballName){
+		ArrayList<String> list=new ArrayList<>();
+		list.add("Defend");
+		list.add("Run");
+		if(ballName=="Full toss"){
+			list.add("Run Fast");
+			list.add("Square Cut");
+			list.add("Helicopter");
+		}else if(ballName=="Yorker"){
+			list.add("Straight Drive");
+			list.add("Square Cut");
+			list.add("Hook");
+		}else if(ballName=="Out-swinger"){
+			list.add("Cover Drive");
+			list.add("Pull");
+			list.add("Helicopter");
+		}else if(ballName=="In-swinger"){
+			list.add("On Drive");
+			list.add("Pull");
+			list.add("Hook");
+		}else if(ballName=="Bouncer"){
+			list.add("Cover Drive");
+			list.add("Pull");
+			list.add("Hook");
+		}else{
+			list.add("On Drive");
+			list.add("Pull");
+			list.add("Helicopter");
+		}
+		return list;
+	}
+	public void show(){
+		System.out.println("Current Runs "+runs);
+		System.out.println("Runs on Last Ball "+runsInLastBall);
+		System.out.println("Current Ball "+ballName);
+		System.out.println("Possible Shots:");
+		ArrayList<String> possibleShots=getList(ballName);
+		for(int i=0;i<possibleShots.size();i++){
+			String shot=possibleShots.get(i);
+			float shot_modifier=shotModifier(shot);
+			float ball_modifier=ballModifier(ballName);
+			float hun=100;
+			float probability=(((shot_modifier-ball_modifier)*hun)/shot_modifier);
+			System.out.println(shot+"-"+NoOfRuns(shot)+"-"+probability);
+		}
+
+	}
+	public int ballModifier(String ball){
+		if(ball=="Full toss") return 4;
+		if(ball=="Yorker") return 3;
+		if(ball=="Out-swinger") return 3;
+		if(ball=="In-swinger") return 2;
+		if(ball=="Bouncer") return 4;
+		if(ball=="Slower Ball") return 2;
+		return -1;
+	}
+	public int shotModifier(String shot){
+		if(shot=="Defend") return 5;
+		if(shot=="Run") return 7;
+		if(shot=="Run Fast") return 6;
+		if(shot=="Cover Drive") return 7;
+		if(shot=="On Drive") return 5;
+		if(shot=="Straight Drive") return 6;
+		if(shot=="Square Cut") return 7;
+		if(shot=="Pull") return 8;
+		if(shot=="Hook") return 7;
+		if(shot=="Helicopter") return 8;
+		return -1;
+	}
+	public int NoOfRuns(String shot){
+		System.out.println(shot);
+		if(shot=="Defend") return 0;
+		if(shot=="Run") return 1;
+		if(shot=="Run Fast") return 2;
+		if(shot=="Cover Drive") return 2;
+		if(shot=="On Drive") return 2;
+		if(shot=="Straight Drive") return 2;
+		if(shot=="Square Cut") return 4;
+		if(shot=="Pull") return 4;
+		if(shot=="Hook") return 6;
+		if(shot=="Helicopter") return 6;
+		return -1;
+	}
+	public float getProbability(String ball,String shot){
+		float shot_modifier=shotModifier(shot);
+		float ball_modifier=ballModifier(ball);
+		float hun=100;
+		return (((shot_modifier-ball_modifier)*hun)/shot_modifier);
+	}
+
+}
+class Hitwicket{
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		Cricket newGame=new Cricket();
+		String mode=sc.next();
+		System.out.println("Enter the Bowler type and Batsman Type");
+		newGame.bowlerType=sc.next();
+		newGame.batsmanType=sc.next();
+		for(int i=0;i<6;i++){
+			String ball=getRandomBalll();
+			newGame.ballName=ball;
+			newGame.show();
+			String shot=sc.next();
+			float prob=newGame.getProbability(ball,shot);
+			if(prob>50){
+				System.out.println("YOU HIT A "+newGame.NoOfRuns(shot));
+				newGame.runs+=newGame.NoOfRuns(shot);
+				newGame.runsInLastBall=newGame.NoOfRuns(shot);
+			}else{
+				System.out.println("You missed");
+			}
+		}
+	}
+	public static String getRandomBalll(){
+		String []balls={"Full toss","Yorker","Out-swinger","In-swinger","Bouncer","Slower Ball"};
+		int rnd=new Random().nextInt(balls.length);
+		return balls[rnd];
+	}
+}

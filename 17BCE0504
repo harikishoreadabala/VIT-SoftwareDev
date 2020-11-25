@@ -100,28 +100,65 @@ class Hitwicket{
 	public static void main(String[] args) {
 		Scanner sc=new Scanner(System.in);
 		Cricket newGame=new Cricket();
+		System.out.println("Enter Mode Of The game");
 		String mode=sc.next();
-		System.out.println("Enter the Bowler type and Batsman Type");
-		newGame.bowlerType=sc.next();
-		newGame.batsmanType=sc.next();
-		for(int i=0;i<6;i++){
-			String ball=getRandomBalll();
-			newGame.ballName=ball;
-			newGame.show();
-			String shot=sc.next();
-			float prob=newGame.getProbability(ball,shot);
-			if(prob>50){
-				System.out.println("YOU HIT A "+newGame.NoOfRuns(shot));
-				newGame.runs+=newGame.NoOfRuns(shot);
-				newGame.runsInLastBall=newGame.NoOfRuns(shot);
-			}else{
-				System.out.println("You missed");
+		//Initially playing game for One Over
+		int n=1;
+		// If User Gives input as PvE mode then we will be having 3 overs
+		if(mode=="PvE"){
+			n=3;
+		}
+		for(int over=0;over<n;over++){
+			System.out.println("Enter the Bowler type and Batsman Type");
+			newGame.bowlerType=sc.next();
+			newGame.batsmanType=sc.next();
+			for(int i=0;i<6;i++){
+				String ball=getRandomBalll();
+				newGame.ballName=ball;
+				newGame.show();
+				System.out.println("Enter the shot you want to play");
+				String shot=sc.next();
+				float prob=newGame.getProbability(ball,shot);
+				if(prob>50){
+					System.out.println("YOU HIT A "+noOfRuns(shot));
+					newGame.runs+=noOfRuns(shot);
+					newGame.runsInLastBall=noOfRuns(shot);
+				}else{
+					System.out.println("You missed");
+				}
 			}
+			newGame.show();
 		}
 	}
 	public static String getRandomBalll(){
 		String []balls={"Full toss","Yorker","Out-swinger","In-swinger","Bouncer","Slower Ball"};
 		int rnd=new Random().nextInt(balls.length);
 		return balls[rnd];
+	}
+	public static int noOfRuns(String shot){
+		// System.out.println("*****"+shot);
+		String defend="Defend";
+		String run="Run";
+		String run_fast="Run Fast";
+		String cover_drive="Cover Drive";
+		String on_drive="On Drive";
+		String sd="Straight Drive";
+		String sq="Square Cut";
+		String pull="Pull";
+		String hook="Hook";
+		String helicopter="Helicopter";
+		if(shot.equals(defend)){
+			return 0;
+		} 
+		if(shot.equals(run)) return 1;
+		if(shot.equals(run_fast)) return 2;
+		if(shot.equals(cover_drive)) return 2;
+		if(shot.equals(on_drive)) return 2;
+		if(shot.equals(sd)) return 2;
+		if(shot.equals(sq)) return 4;
+		if(shot.equals(pull)) return 4;
+		if(shot.equals(hook)) return 6;
+		if(shot.equals(helicopter)) return 6;
+		return -1;
 	}
 }
